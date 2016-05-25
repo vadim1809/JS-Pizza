@@ -1,3 +1,205 @@
 @mainColor: blue;
+@color_style: #EA862E;
 
 @import "pizza/pizza-card";
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #FFFFF5;
+}
+
+.main-content {
+    margin: 100px;
+    margin-right: 320px;
+    margin-left: 20px;
+    min-height: 400px!important;
+}
+
+/* ---------------
+LOGO label 
+-------------------*/
+
+.top-label, .bottom-label{
+    position: fixed;
+    z-index: 999999;
+    text-align: center;
+}
+
+.top-label {
+    top: 0;
+    left: 10px;
+}
+
+.top-label img {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.label-square {
+    width: 100px;
+    height: 90px;
+    background-color: #EA862E;
+    margin: 0 0 -6px 0;
+    color: white;
+    font-size: 20px;
+    padding-top: 15px;
+}
+
+.label-square div{
+    font-size: 27px;
+}
+
+.bottom-label {
+    bottom: 0;
+    left: 10px;
+    .label-square{
+        font-size: 13px;
+        font-weight: bolder;
+        height: 120px;
+        hr {
+            border: 1px dashed #825D38;
+            margin-top: 5px;
+            margin-bottom: 7px;
+            width: 80%;
+        }
+    }
+    img {
+        margin-bottom: -6px; 
+    }
+}
+
+
+/*-----------------
+end LOGO label 
+-------------------*/
+
+
+/*-----------------
+navigation BAR 
+-------------------*/
+.navig {
+    padding-left: 130px;
+    opacity: 0.95;
+    min-height: 90px;
+}
+
+.advertising {
+    padding-top: 17px;
+    border-bottom: 1px solid #827F7C;
+    margin-bottom: 8px;
+    :first-child {
+        font-size: 20px;
+    }
+    color: #a1a1a1;
+    * {
+        padding-right: 15px;
+    }
+    button {
+        float: right;
+        margin-top: -12px
+    }
+}
+
+.advertising .big_font {
+    font-size: 20px;
+}
+
+.pizza-nav-floor {
+    color: white;
+    font-size: 17px;
+}
+
+/*-----------------
+end navigation BAR 
+-------------------*/
+
+
+/*-----------------
+FILTERS OF PIZZA 
+-------------------*/
+
+.pizzas-filters {
+    margin-top: 100px;
+    margin-bottom: 40px;
+    h2 {
+        text-align: center;
+    }
+}
+
+.badge {
+    background-color: @color_style;
+}
+
+.pizza_type > ul {
+//    list-style: none;
+    margin: 20px 0 10px 0;
+    padding: 0;
+    text-align: center;
+    li {
+        display: inline-block;
+        cursor: pointer;
+//        padding-bottom: 20px;
+        a {
+            color: @color_style;
+            text-decoration: none;
+            padding: 10px;
+        }
+        :hover {
+            background-color:#F0EDED;
+            border-radius: 3px;
+        }
+        .active {
+            background-color: @color_style;
+            color: white;
+            border-radius: 4px;
+        }
+    }
+}
+
+/*-----------------
+BUYING PANEL
+-------------------*/
+.panel-right {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    z-index: 99999;
+    box-shadow: rgba(0,0,0,.2) -3px 3px 10px;
+    
+}
+
+.left-block {
+    
+    padding-left: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #F2EDED;
+    :last-child {
+        font-size: 11px;
+        font-weight: normal;
+        color: #D6CFCF;
+        cursor: pointer;
+    }
+    .badge {
+        margin-right: 20px;
+    }
+}
+
+.order-list {
+    background-color: #F5F5F5;
+    height: 456px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+/*-----------------
+end BUYING PANEL 
+-------------------*/

@@ -15,24 +15,60 @@
 
 </head>
 <body>
-<div id="cart"></div>
-<div class="container">
-    <div class="row" id="pizza_list">
-        <div class="col-sm-6 col-md-4">
-            <div class="thumbnail pizza-card">
-                <img src="assets/images/pizza_1.jpg">
-
-                <div class="caption"><h3>Thumbnail label</h3>
-
-                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-
-                    <p>
-                        <a href="#" class="btn btn-primary">Button 2</a>
-                        <a href="#" class="btn btn-default">Button 1</a>
-                    </p>
+    
+    <div class="top-label">
+        <div class = "label-square">PIZZA <div>KMA</div></div>
+        <img src="assets/images/discount.svg">
+    </div>
+    
+    <div class="navbar navbar-inverse navbar-fixed-top navig">
+        <div class="advertising">
+            <div class="visible-xs-inline-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block">(044) 222 5 222</div>
+            <div class="hidden-xs hidden-sm visible-md-inline-block visible-lg-inline-block">24 години/7 днів на тиждень</div>
+            <div class="hidden-xs hidden-sm hidden-md visible-lg-inline-block big_font">Безкоштовна доставка піци</div>
+            <button class="btn btn-warning" type="submit">Увійти</button>
+        </div>
+        <div class="pizza-nav-floor visible-lg-inline-block visible-md-inline-block">
+            Піца
+        </div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="main-content">
+            <div class="pizzas-filters">
+                <div class="title">
+                    <h2>
+                        <span id="type-title">Усі піци</span>
+                        <span class="badge">8</span>
+                    </h2>
+                </div>
+                <div class="pizza_type">
+                    <ul>
+                        <li><a id="all" class="active" href="#">Усі</a></li>
+                        <li><a id="meat" href="#">М'ясні</a></li>
+                        <li><a id="pineapple" href="#">З ананасом</a></li>
+                        <li><a id="mushroom" href="#">З грибами</a></li>
+                        <li><a id="ocean" href="#">З морепродуктами</a></li>
+                        <li><a id="tomato" href="#">Вега</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
+            <div class="row" id="pizza_list">
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail pizza-card">
+                            <img src="assets/images/pizza_1.jpg">
+                            
+                            <div class="caption"><h3>Thumbnail label</h3>
+
+                                <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+
+                                <p>
+                                    <a href="#" class="btn btn-primary">Button 2</a>
+                                    <a href="#" class="btn btn-default">Button 1</a>
+                                </p>
+                            </div>
+                        </div>
+                </div>
 
         <div class="col-sm-6 col-md-4">
             <div class="thumbnail pizza-card">
@@ -65,6 +101,40 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-right">
+        <div class="left-block">
+            Замовлення
+            <span class="badge"></span>
+            <span id="cleanup">Очистити замовлення</span>
+        </div>
+        <div class="order-list">
+
+            Пусто в холодильнику?
+            <br>
+            Замов піцу!
+
+        </div>
+        <div class="buy-block">
+            <div class="sum_price_text">
+                СУМА: <span class="sum_price"></span>
+            </div>
+            <button class="btn btn-warning">Замовити</button>
+        </div>
+    </div>
+<!--
+<div class="footer">
+    <p>Pizza.22 - практичний проект в межах курсу JavaScript в Києво-Могилянській Академії</p>
+    <p>Доставка піци не здійснюється.</p>
+</div>
+  -->  
+<div class="bottom-label">
+    <img src="assets/images/discount.svg">
+    <div class="label-square">
+        ЦЬОГО<br>ТИЖНЯ<br>НА ВСЕ<br><hr>-20%
     </div>
 </div>
 
