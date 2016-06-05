@@ -2,7 +2,8 @@
  * Created by chaika on 25.01.16.
  */
 
-$(function(){
+
+$(document).ready(function(){
     //This code will execute when the page is ready
     var PizzaMenu = require('./pizza/PizzaMenu');
     var PizzaCart = require('./pizza/PizzaCart');
@@ -10,6 +11,8 @@ $(function(){
 
     PizzaCart.initialiseCart();
     PizzaMenu.initialiseMenu();
+
+    PizzaMenu.select_pizza_type();
 
 
 });

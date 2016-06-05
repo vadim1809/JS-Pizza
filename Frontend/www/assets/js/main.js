@@ -193,7 +193,7 @@ exports.PizzaCart_OneItem = ejs.compile("<div>\n    <%= pizza.title %> (<%= size
  * Created by chaika on 25.01.16.
  */
 
-$(function(){
+$(document).ready(function(){
     //This code will execute when the page is ready
     var PizzaMenu = require('./pizza/PizzaMenu');
     var PizzaCart = require('./pizza/PizzaCart');
@@ -202,7 +202,9 @@ $(function(){
     PizzaCart.initialiseCart();
     PizzaMenu.initialiseMenu();
 
-
+    PizzaMenu.select_pizza_type();
+    
+    
 });
 },{"./Pizza_List":1,"./pizza/PizzaCart":4,"./pizza/PizzaMenu":5}],4:[function(require,module,exports){
 /**
@@ -327,27 +329,57 @@ function showPizzaList(list) {
 }
 
 function filterPizza(filter) {
+    var counter = 0;
     //Масив куди потраплять піци які треба показати
     var pizza_shown = [];
 
     Pizza_List.forEach(function(pizza){
         //Якщо піка відповідає фільтру
-        //pizza_shown.push(pizza);
-
+        if ((pizza.content[filter] && pizza.content[filter].length != 0) || filter === "all") {
+          counter++;
+          pizza_shown.push(pizza);
+        }
         //TODO: зробити фільтри
     });
 
     //Показати відфільтровані піци
     showPizzaList(pizza_shown);
+    return counter;
 }
 
 function initialiseMenu() {
     //Показуємо усі піци
     showPizzaList(Pizza_List)
 }
+    
+function select_pizza_type() {
+    $(".pizza-type>ul>li").click(function(){
+    if (!$(this).children().hasClass("active")) {
+        $(this).parent().find(".active").removeClass("active");
+        $(this).find("a").addClass("active");
+
+        //change fiter's header
+        var header = $(this).children().text();
+        switch (header) {
+            case "Усі":
+            case "М’ясні":
+                header += " піци";
+                break;
+            case "Вега" : 
+                header = "Вегетаріанська піци";
+                break;
+            default: header = "Піци " + header.toLowerCase();
+        }
+        //set new header
+        $(".title #type-title").text(header);
+        $(".title .badge").text(filterPizza($(this).children().attr("id")));
+    }
+  });
+}
 
 exports.filterPizza = filterPizza;
 exports.initialiseMenu = initialiseMenu;
+exports.select_pizza_type = select_pizza_type;
 },{"../Pizza_List":1,"../Templates":2,"./PizzaCart":4}],6:[function(require,module,exports){
 /*
  * EJS Embedded JavaScript templates
@@ -1318,8 +1350,7 @@ module.exports={
     "shasum": "82e15b1b2a1f948b18097476ba2bd7c66f4d1566",
     "tarball": "http://registry.npmjs.org/ejs/-/ejs-2.4.1.tgz"
   },
-  "directories": {},
-  "readme": "ERROR: No README data found!"
+  "directories": {}, "readme": "ERROR: No README data found!"
 }
 
 },{}],9:[function(require,module,exports){
