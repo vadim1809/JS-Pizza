@@ -2,7 +2,7 @@
  * Created by chaika on 02.02.16.
  */
 var Templates = require('../Templates');
-+var Storage = require('../storage/Storage');
+var Storage = require('../storage/Storage');
 
 //Перелік розмірів піци
 var PizzaSize = {
@@ -32,21 +32,9 @@ function addToCart(pizza, size) {
 
 function removeFromCart(cart_item) {
     //Видалити піцу з кошика
-    
+    //TODO: треба зробити
     Cart.splice(Cart.indexOf(cart_item), 1)
     //Після видалення оновити відображення
-    updateCart();
-}
-
-function initialiseCart() {
-    //Фукнція віпрацьвуватиме при завантаженні сторінки
-    //Тут можна наприклад, зчитати вміст корзини який збережено в Local Storage то показати його
-    //TODO: ...
-    var saved_orders = Storage.get("cart");
-    if (saved_orders) {
-        Cart = saved_orders;
-    }
-    cleanCartHandler();
     updateCart();
 }
 
@@ -109,24 +97,14 @@ function updateCart() {
 
     $(".left-block .badge").text(Cart.length);
 
-    if (!Cart.length) {
-        $(".order-button").addClass("btn-block");
-        $(".order-button").prop("disabled", true);
-    } else {
-        $(".order-button").removeClass("btn-block");
-        $(".order-button").prop("disabled", false);
-    }
-
-    Storage.set("cart", Cart);
-    updatePrice();
+    Storage.set("basket", Cart);
 }
 
 function updatePrice() {
     var price = 0;
-    Cart.forEach(function(pizza){
-        price+= (pizza["pizza"] [pizza["size"] ]["price"]) * pizza.quantity;
+    Cart.forEach(function(ordered_pizza){
+        price += ordered_pizza.pizza.price * ordered_pizza.quantity;
     });
-    $(".sum_price").text(price);
 }
 
 //clean all orders

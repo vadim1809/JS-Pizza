@@ -15,8 +15,8 @@ module.exports = function(grunt) {
                 //brfs замість fs.readFileSync вставляє вміст файлу
                 transform:  [ require('brfs') ],
                 browserifyOptions: {
-                    //Папка з корнем джерельних кодів javascript
-                    basedir: "Frontend/src/js/"
+                    //Папка з коренем вихідних файлів javascript
+                    basedir: "Frontend/src/"
                 }
             },
 
@@ -47,16 +47,16 @@ module.exports = function(grunt) {
     config.watch = watchDebug;
     grunt.initConfig(config);
 
-    //Сказати які модулі необхідно виокристовувати
+    //Сказати, які модулі необхідно(plugins) виокристовувати
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
 
-    //Список завданнь по замовчування
+    //Список завданнь за замовчуванням
     grunt.registerTask('default',
         [
             'browserify:pizza',
-            //Інші завдання які необхідно виконати
+            //Інші завдання, які необхідно виконати
         ]
     );
 
