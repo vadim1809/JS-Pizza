@@ -3,7 +3,7 @@
  */
 var Templates = require('../Templates');
 var PizzaCart = require('./PizzaCart');
-var Pizza_List = require('../Pizza_List');
+var Pizza_List = null;
 
 //HTML едемент куди будуть додаватися піци
 var $pizza_list = $("#pizza_list");
@@ -37,8 +37,8 @@ function filterPizza(filter) {
     var pizza_shown = [];
 
     Pizza_List.forEach(function(pizza){
-        //Якщо піка відповідає фільтру
-        if ((pizza.content[filter] && pizza.content[filter].length != 0) || filter === "all"){
+        //Якщо піца відповідає фільтру
+        if ((pizza.content[filter] && pizza.content[filter].length != 0) || filter === "all") {
             counter++;
             pizza_shown.push(pizza);
         }
@@ -50,13 +50,15 @@ function filterPizza(filter) {
     return counter;
 }
 
-function initialiseMenu() {
+function initialiseMenu(server_list) {
     //Показуємо усі піци
-    showPizzaList(Pizza_List)
+//    Pizza_List = server_list;
+    select_pizza_type();
+    showPizzaList(Pizza_List);
 }
 
-function select_pizza_type(){
-    $(".pizza-type>ul>li").click(function(){
+function select_pizza_type() {
+  $(".pizzas-filters ul li").click(function(){
     if (!$(this).children().hasClass("active")) {
         $(this).parent().find(".active").removeClass("active");
         $(this).find("a").addClass("active");

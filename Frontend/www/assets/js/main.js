@@ -184,7 +184,7 @@ module.exports = pizza_info;
 var ejs = require('ejs');
 
 
-exports.PizzaMenu_OneItem = ejs.compile("<%\n\nfunction getIngredientsArray(pizza) {\n    //Отримує вміст піци\n    var content = pizza.content;\n    var result = [];\n\n    //Object.keys повертає масив ключів в об’єкті JavaScript\n\n    Object.keys(content).forEach(function(key){\n\n        //a.concat(b) створює спільний масив із масивів a та b\n        result = result.concat(content[key]);\n    });\n\n    return result;\n}\n\n   %>\n<div class=\"col-md-6 col-lg-4 pizza-card\">\n    <div class=\"thumbnail\">\n        <img class=\"pizza-icon\" src=\"<%= pizza.icon %>\" alt=\"Pizza\">\n\n        <% if(pizza.is_new) { %>\n        <span class=\"label label-danger\">Нова</span>\n        <% } else if(pizza.is_popular) {%>\n        <span class=\"label label-success\">Популярна</span>\n        <% } %>\n\n        <div class=\"caption\">\n            <span class=\"title\"><%= pizza.title %></span>\n            <div class=\"type\"><%= pizza.type %></div>\n            <div class=\"description\">\n                <%= getIngredientsArray(pizza).join(\", \") %>\n            </div>\n        </div>\n\n        <!-- Перед тим щоб показати кнопку необхідно переконатися, що піца має великий розмір -->\n        <button class=\"btn btn-primary buy-big\">Купити велику</button>\n    </div>\n</div>");
+exports.PizzaMenu_OneItem = ejs.compile("<%\n\nfunction getIngredientsArray(pizza) {\n    //Отримує вміст піци\n    var content = pizza.content;\n    var result = [];\n\n    //Object.keys повертає масив ключів в об’єкті JavaScript\n\n    Object.keys(content).forEach(function(key){\n\n        //a.concat(b) створює спільний масив із масивів a та b\n        result = result.concat(content[key]);\n    });\n\n    return result;\n}\n\n   %>\n\n<div class=\"col-md-6 col-lg-4\">\n    <div class=\"thumbnail pizza-card\">\n        <img src=\"<%= pizza.icon %>\">\n        <% if(pizza.is_new) { %>\n            <h3 class=\"pizza-label\">\n                <span class=\"label label-danger\">Нова</span>\n            </h3>\n        <% } else if(pizza.is_popular) {%>\n            <h3 class=\"pizza-label\">\n                <span class=\"label label-success\">Популярна</span>\n            </h3>\n        <% } %>\n        <div class=\"caption\">\n            <h3><%= pizza.title %></h3>\n            <div class=\"type\"><%= pizza.type %></div>\n            \n            <div class=\"description\">\n                <p><%= getIngredientsArray(pizza).join(\", \") %></p>\n            </div>\n            <div class=\"row\">\n                <% if (pizza.small_size) {%>\n                    <div class=\"col-sm-6 small-pizza\">\n                        <img src=\"assets/images/size-icon.svg\"><span><%= pizza.small_size.size %></span><br>\n                        <img src=\"assets/images/weight.svg\"><span><%= pizza.small_size.weight %></span><br>\n                        <div class=\"price\">\n                            <h2 class=\"price-value\"><%= pizza.small_size.price %></h2>\n                            <span>грн.</span>\n                        </div>\n                        <a role=\"button\" class=\"btn btn-warning\">Купити</a>\n                    </div>\n                <% } %>\n\n\n                <% if( pizza.big_size) { %>\n                    <div class=\"col-sm-6 large-pizza\">\n                        <img src=\"assets/images/size-icon.svg\"><span><%= pizza.big_size.size %></span><br>\n                        <img src=\"assets/images/weight.svg\"><span><%= pizza.big_size.weight %></span><br>\n                        <div class=\"price\">\n                            <h2 class=\"price-value\"><%= pizza.big_size.price %></h2>\n                            <span>грн.</span>\n                        </div>\n                        <a role=\"button\" class=\"btn btn-warning\">Купити</a>\n                    </div>\n                <% } %>\n            </div>\n        </div>\n    </div>\n</div>");
 
 exports.PizzaCart_OneItem = ejs.compile("<div>\n    <%= pizza.title %> (<%= size %>)\n    <div>Ціна: <%= pizza[size].price %> грн.</div>\n    <div>\n        <button class=\"btn btn-danger minus\">-</button>\n        <span class=\"label label-default\"><%= quantity %></span>\n        <button class=\"btn btn-success plus\">+</button>\n    </div>\n</div>");
 
@@ -203,8 +203,8 @@ $(document).ready(function(){
     PizzaMenu.initialiseMenu();
 
     PizzaMenu.select_pizza_type();
-    
-    
+
+
 });
 },{"./Pizza_List":1,"./pizza/PizzaCart":4,"./pizza/PizzaMenu":5}],4:[function(require,module,exports){
 /**
@@ -334,10 +334,10 @@ function filterPizza(filter) {
     var pizza_shown = [];
 
     Pizza_List.forEach(function(pizza){
-        //Якщо піка відповідає фільтру
+        //Якщо піца відповідає фільтру
         if ((pizza.content[filter] && pizza.content[filter].length != 0) || filter === "all") {
-          counter++;
-          pizza_shown.push(pizza);
+            counter++;
+            pizza_shown.push(pizza);
         }
         //TODO: зробити фільтри
     });
@@ -351,9 +351,9 @@ function initialiseMenu() {
     //Показуємо усі піци
     showPizzaList(Pizza_List)
 }
-    
+
 function select_pizza_type() {
-    $(".pizza-type>ul>li").click(function(){
+  $(".pizza-type>ul>li").click(function(){
     if (!$(this).children().hasClass("active")) {
         $(this).parent().find(".active").removeClass("active");
         $(this).find("a").addClass("active");
@@ -1329,7 +1329,7 @@ module.exports={
   "_id": "ejs@2.4.1",
   "_shasum": "82e15b1b2a1f948b18097476ba2bd7c66f4d1566",
   "_resolved": "https://registry.npmjs.org/ejs/-/ejs-2.4.1.tgz",
-  "_from": "ejs@>=2.4.1 <3.0.0",
+  "_from": "ejs@^2.4.1",
   "_npmVersion": "2.10.1",
   "_nodeVersion": "0.12.4",
   "_npmUser": {
@@ -1350,7 +1350,7 @@ module.exports={
     "shasum": "82e15b1b2a1f948b18097476ba2bd7c66f4d1566",
     "tarball": "http://registry.npmjs.org/ejs/-/ejs-2.4.1.tgz"
   },
-  "directories": {}, "readme": "ERROR: No README data found!"
+  "directories": {}
 }
 
 },{}],9:[function(require,module,exports){
