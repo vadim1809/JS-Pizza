@@ -1,8 +1,8 @@
 <div class="pizza-ordered-card">
     <div class="pizza-header">
-        <h4><%= pizza.title %> (<%= size %>)</h4>
+        <h4><%= pizza.title %> (<%= (size=="small_size")?"мала":"велика" %>)</h4>
         <div class="pizza-attribute">
-            <img src="assets/images/size-icon.svg"><span><%= pizza[size].size %></span>
+            <img src="assets/images/size-icon.svg"><span><%= (size=="small_size")?"мала":"велика" %></span>
             <img src="assets/images/weight.svg"><span><%= pizza[size].weight %></span><br>
         </div>
     </div>

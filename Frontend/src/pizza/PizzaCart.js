@@ -1,3 +1,6 @@
+/**
+ * Created by chaika on 02.02.16.
+ */
 var Templates = require('../Templates');
 var Storage = require('../storage/Storage');
 
@@ -15,9 +18,8 @@ var $cart = $(".order-list");
 
 function addToCart(pizza, size) {
     //Додавання однієї піци в кошик покупок
-
     //Приклад реалізації, можна робити будь-яким іншим способо
-    var excistenPizza = pizza_excist(pizza);
+    var excistenPizza = pizza_excist(pizza, size);
     if (excistenPizza) {
         excistenPizza["quantity"]++;
     } else {
@@ -31,10 +33,10 @@ function addToCart(pizza, size) {
     updateCart();
 }
 
-function pizza_excist(pizza) {
+function pizza_excist(pizza, size) {
     var bool;
     Cart.forEach(function(pizzaInCart){
-        if(pizzaInCart["pizza"]["id"] === pizza["id"])
+        if(pizzaInCart["pizza"]["id"] === pizza["id"] && pizzaInCart["size"] === size)
             bool = pizzaInCart;
     });
     return bool;
@@ -107,6 +109,14 @@ function updateCart() {
 
     $(".left-block .badge").text(Cart.length);
 
+    if (!Cart.length) {
+        $(".order-button").addClass("btn-block");
+        $(".order-button").prop("disabled", true);
+    } else {
+        $(".order-button").removeClass("btn-block");
+        $(".order-button").prop("disabled", false);
+    }
+
     Storage.set("cart", Cart);
     updatePrice();
 }
@@ -114,7 +124,7 @@ function updateCart() {
 function updatePrice() {
     var price = 0;
     Cart.forEach(function(pizza){
-        price+= (pizza["pizza"][pizza["size"]]["price"]) * pizza.quantity;
+        price+= (pizza["pizza"] [pizza["size"] ]["price"]) * pizza.quantity;
     });
     $(".sum_price").text(price);
 }
