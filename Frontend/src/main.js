@@ -28,37 +28,43 @@ $(function(){
 
     $(".next-step-button").click(function(){
         if (Validation.correctInput()) {
+
+            var totalPrice = 0;
+            PizzaCart.getPizzaInCart().forEach(function(cart_item){
+                totalPrice += cart_item.quantity * cart_item.pizza[cart_item.size].price
+            });
+
             API.createOrder({
-                name: $("#inputName").val(),
-                phone: $("#inputPhone").val(),
-                address: $("#inputAddress").val(),
-                pizza: PizzaCart.getPizzaInCart()
+                name: $('#inputName').val(),
+                phone: $('#inputPhone').val(),
+                address: $('#inputAddress').val(),
+                pizza: PizzaCart.getPizzaInCart(),
+                price: totalPrice
             }, function(err, result){
                 if(err) {
                     alert("Can't create order");
                 } else {
-                    alert("Order created");
-                    //window.location = "/order.html";
-                    /*LiqPayCheckout.init({
-                        data:   result.data,
-                        signature:  result.signature,
-                        embedTo:    "#liqpay",
-                        mode:   "popup" //  embed   ||  popup
-                    }).on("liqpay.callback",
-                        function(data){
-                            console.log(data.status);
-                            console.log(data);
-                        }).on("liqpay.ready",
-                            function(data){
-                            //  ready
-                            }).on("liqpay.close",   function(data){
-                            //  close
-                            });*/
+                    LiqPayCheckout.init({
+                        data: result.data,
+                        signature: result.signature,
+                        embedTo: "#liqpay",
+                        mode: "popup"
+                    }).on("liqpay.callback", function (data) {
+                        //console.log(data.status);
+                        //console.log(data);
+                        if(data.status==="success" || data.status==="sandbox"){
+                            alert("Оплата успішна");
+                            //window.location = "/";
+                        }
+                    }).on("liqpay.ready", function (data) {
+                    }).on("liqpay.close", function (data) {
+                        window.location = "/";
+                        alert("Оплата успішна");
+                    });
                 }
             });
         }
     });
-
 
 
     require('./googleMap');

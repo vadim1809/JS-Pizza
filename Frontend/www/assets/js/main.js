@@ -30,7 +30,6 @@ function backendPost(url, data, callback) {
         },
         fail: function() {
             callback(new Error("Ajax Failed"));
-            console.log ("error((");
         }
     })
 }
@@ -55,6 +54,8 @@ exports.PizzaMenu_OneItem = ejs.compile("<%\n\nfunction getIngredientsArray(pizz
 exports.PizzaCart_OneItem = ejs.compile("<div class=\"pizza-ordered-card\">\n    <div class=\"pizza-header\">\n        <h4><%= pizza.title %> (<%= (size==\"small_size\")?\"мала\":\"велика\" %>)</h4>\n        <div class=\"pizza-attribute\">\n            <img src=\"assets/images/size-icon.svg\"><span><%= (size==\"small_size\")?\"мала\":\"велика\" %></span>\n            <img src=\"assets/images/weight.svg\"><span><%= pizza[size].weight %></span><br>\n        </div>\n    </div>\n    <div class=\"order-text\">\n        <div class=\"price-box\">\n            <span class=\"price label\"><%= pizza[size].price %> грн.</span>\n            <button class=\"btn btn-danger btn-xs btn-circle minus\">\n                <i class=\"glyphicon glyphicon-minus\"></i>\n            </button>\n            <span class=\"label pizza-counter\"></span>\n            <button class=\"btn btn-success btn-xs btn-circle plus\">\n                <i class=\"glyphicon glyphicon-plus\"></i>\n            </button>\n            <button class=\"btn btn-default btn-xs btn-circle btn-delete cancel\">\n                <i class=\"glyphicon glyphicon-remove\"></i>\n            </button>\n        </div>\n        <div class=\"pizza-image\">\n            <img src=\"<%= pizza.icon %>\" >\n        </div>\n    </div>\n</div>");
 
 },{"ejs":10}],3:[function(require,module,exports){
+
+
 function initialize() {
     //Тут починаємо працювати з картою
     var mapProp = {
@@ -67,11 +68,124 @@ function initialize() {
     //Карта створена і показана
 
     //Write functions here!
+    var point = new google.maps.LatLng(50.464379,30.519131);
+
+    var marker = new google.maps.Marker({
+    position: point,
+    //map - це змінна карти створена за допомогою new google.maps.Map(...)
+    map:  map,
+    icon: "assets/images/map-icon.png"
+    });
+
+
+    var end_marker = new google.maps.Marker({
+      position: null,
+      map: map,
+      icon: "assets/images/home-icon.png"
+    });
+
+
+    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers:true});
+    var directionsService = new google.maps.DirectionsService();
+
+    directionsDisplay.setMap(map);
+
+    google.maps.event.addListener(map, 'click',function(me){
+      var coordinates = me.latLng;
+      geocodeLatLng(coordinates,  function(err, address){
+        if(!err)  {
+          //Дізналися адресу
+          $("#inputAddress").val(address);
+          //print address to information order block
+          $("#delivery_address").text(address);
+          geocodeAddress(address, function(err, coordinates){
+            if (!err) {
+              end_marker.setPosition(coordinates);
+              calculateRoute(point, coordinates, function(err, length){
+                //console.log(length.duration);
+                $("#delivery_time").text(length.duration.text);
+              });
+            }
+          });
+        } else  {
+          console.log("Немає адреси")
+        }
+      });
+    });
+
+
+    $("#inputAddress").keyup(function(){
+      var TIME_OUT = 2000;
+      setTimeout(function(){
+        var address = $("#inputAddress").val();
+        //$("#delivery_address").text($("#inputAddress").val())
+        $("#delivery_address").text(address);
+        geocodeAddress(address, function(err, coordinates){
+          if(!err) {
+            end_marker.setPosition(coordinates);
+            calculateRoute(point, coordinates, function(err, length){
+                //console.log(length.duration);
+                if (!err) {
+                  $("#delivery_time").text(length.duration.text);
+                }
+            });
+          }
+        });
+      }, TIME_OUT);
+    });
+
+  //address from coordinate
+  function  geocodeLatLng(latlng, callback){
+    //Модуль за роботу з адресою
+    var geocoder  = new google.maps.Geocoder();
+    geocoder.geocode({'location': latlng},  function(results, status) {
+      if  (status === google.maps.GeocoderStatus.OK &&  results[1]) {
+        var address =  results[1].formatted_address;
+        callback(null,  address);
+      } else  {
+        callback(new  Error("Can't  find  address"));
+      }
+    });
+  }
+
+  //coordinates from address
+  function  geocodeAddress(address, callback)  {
+    var geocoder  = new google.maps.Geocoder();
+    geocoder.geocode({'address':  address}, function(results, status) {
+      if  (status === google.maps.GeocoderStatus.OK &&  results[0]) {
+        var coordinates = results[0].geometry.location;
+        callback(null,  coordinates);
+      } else  {
+        callback(new  Error("Can  not find  the address"));
+      }
+    });
+  }
+
+  function  calculateRoute(A_latlng,   B_latlng,  callback) {
+    var directionService =  new google.maps.DirectionsService();
+    directionService.route({
+      origin: A_latlng,
+      destination:  B_latlng,
+      travelMode: google.maps.TravelMode.DRIVING
+    },  function(response,  status) {
+      if ( status === google.maps.DirectionsStatus.OK ) {
+        var leg = response.routes[0].legs[0];
+        
+        directionsDisplay.setDirections(response);
+        
+        callback(null,  {
+          duration: leg.duration,
+        });
+      } else  {
+        callback(new  Error("Can' not find  direction"));
+      }
+    });
+  }
 
 }
-
 //Коли сторінка завантажилась
 google.maps.event.addDomListener(window, 'load', initialize);
+
 
 },{}],4:[function(require,module,exports){
 /**
@@ -104,37 +218,44 @@ $(function(){
 
     $(".next-step-button").click(function(){
         if (Validation.correctInput()) {
+
+            var totalPrice = 0;
+            PizzaCart.getPizzaInCart().forEach(function(cart_item){
+                totalPrice += cart_item.quantity * cart_item.pizza[cart_item.size].price
+            });
+
             API.createOrder({
-                name: $("#inputName").val(),
-                phone: $("#inputPhone").val(),
-                address: $("#inputAddress").val(),
-                pizza: PizzaCart.getPizzaInCart()
+                name: $('#inputName').val(),
+                phone: $('#inputPhone').val(),
+                address: $('#inputAddress').val(),
+                pizza: PizzaCart.getPizzaInCart(),
+                price: totalPrice
             }, function(err, result){
                 if(err) {
                     alert("Can't create order");
                 } else {
-                    alert("Order created");
-                    //window.location = "/order.html";
-                    /*LiqPayCheckout.init({
-                        data:   result.data,
-                        signature:  result.signature,
-                        embedTo:    "#liqpay",
-                        mode:   "popup" //  embed   ||  popup
-                    }).on("liqpay.callback",
-                        function(data){
-                            console.log(data.status);
-                            console.log(data);
-                        }).on("liqpay.ready",
-                            function(data){
-                            //  ready
-                            }).on("liqpay.close",   function(data){
-                            //  close
-                            });*/
+                    LiqPayCheckout.init({
+                        data: result.data,
+                        signature: result.signature,
+                        embedTo: "#liqpay",
+                        mode: "popup"
+                    }).on("liqpay.callback", function (data) {
+                        //console.log(data.status);
+                        //console.log(data);
+                        if(data.status==="success" || data.status==="sandbox"){
+                            alert("Оплата успішна");
+                            //window.location = "/";
+                        }
+                    }).on("liqpay.ready", function (data) {
+                    }).on("liqpay.close", function (data) {
+                        window.location = "/";
+                        alert("Оплата успішна");
+                            
+                    });
                 }
             });
         }
     });
-
 
 
     require('./googleMap');
@@ -388,47 +509,54 @@ exports.set = function(key, value)  {
 var validation_result = [false, false, false];
 
 $("#inputName").keyup(function(){
-  setTimeout(function(){
-    var name = $("#inputName").val();
-    if (!/[A-zА-я\s']+$/.test(name)) {
-      $(".name-help-block").css("display", "inline-block");
-      validation_result[0] = false;
-    } else {
-      $(".name-help-block").css("display", "none");
-      validation_result[0] = true;
-    }
-  }, 2 * 1000);
+  setTimeout(validate_name(), 1 * 1000);
 });
 
 $("#inputPhone").keyup(function(){
-  setTimeout(function(){
-    var phone = $("#inputPhone").val();
-    if (phone.length != 13 || phone.slice(0,4) !== "+380") {
-      $(".telephone-help-block").css("display", "inline-block");
-      validation_result[1] = false;
-    } else {
-      $(".telephone-help-block").css("display", "none");
-      validation_result[1] = true;
-    }
-  }, 2 * 1000);
+  setTimeout(validate_phone(), 1 * 1000);
 });
 
 $("#inputAddress").keyup(function(){
-  setTimeout(function(){
-    var re = /[A-zА-я\s0-9'єЄ]+$/;
-    var address = $("#inputAddress").val();
-    if (!re.test(address)) {
-      $(".address-help-block").css("display", "inline-block");
-      validation_result[2] = false;
-    } else {
-      $(".address-help-block").css("display", "none");
-      validation_result[2] = true;
-    }
-  }, 2 * 1000);
+  setTimeout(validate_address(), 1 * 1000);
 });
+
+function validate_name() {
+  var name = $("#inputName").val();
+  if (!/[A-zА-я\s']+$/.test(name)) {
+    $(".name-help-block").css("display", "inline-block");
+    validation_result[0] = false;
+  } else {
+    $(".name-help-block").css("display", "none");
+    validation_result[0] = true;
+  }
+}
+
+function validate_phone() {
+  var phone = $("#inputPhone").val();
+  if (phone.length != 13 || phone.slice(0,4) !== "+380") {
+    $(".telephone-help-block").css("display", "inline-block");
+    validation_result[1] = false;
+  } else {
+    $(".telephone-help-block").css("display", "none");
+    validation_result[1] = true;
+  }
+}
+
+function validate_address() {
+  var re = /[A-zА-я\s0-9'єЄ]+$/;
+  var address = $("#inputAddress").val();
+  if (!re.test(address) && address.length === 0) {
+    $(".address-help-block").css("display", "inline-block");
+    validation_result[2] = false;
+  } else {
+    $(".address-help-block").css("display", "none");
+    validation_result[2] = true;
+  }
+}
 
 function correctInput() {
   var result = true;
+  validate_name(); validate_phone(); validate_address();
   validation_result.forEach(function(input) {
     if (!input) {
       result = false;
